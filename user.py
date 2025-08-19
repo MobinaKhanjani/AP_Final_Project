@@ -28,7 +28,7 @@ class User(SQLModel, table=True):
 
     @staticmethod
     def validate_password(password):
-        return len(password) >= 8 and any(char.isdigit() for char in password) and any(char.isalpha() for password)
+        return len(password) >= 8 and any(char.isdigit() for char in password) and any(char.isalpha() for char in password)
 
 # ایجاد پایگاه داده SQLite
 DATABASE_URL = "sqlite:///users.db"
