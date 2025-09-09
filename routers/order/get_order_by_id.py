@@ -1,62 +1,26 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlmodel import Session
-from app.db import get_session
-from app.models.order import Order, OrderItem
-from app.models.item import Item
-from app.schemas.order import OrderRead
+from sqlmodel import SQLModel, create_engine, Session
+from config import settings
+from contextlib import contextmanager
 
-router = APIRouter(prefix="/orders", tags=["orders"])
+# تنظیمات اتصال به دیتابیس SQLite
+DATABASE_URL = "sqlite:///./inventory.db"
 
-@router.post(
-    "/quick",
-    response_model=OrderRead,
-    status_code=status.HTTP_201_CREATED,
+# ایجاد موتور دیتابیس
+engine = create_engine(
+    DATABASE_URL,
+    connect_args={"check_same_thread": False},
+    echo=True
 )
-def quick_order_by_item_id(
-    item_id: int,
-    quantity: int,
-    user_id: int,
-    session: Session = Depends(get_session),
-):
-    """
-    ثبت سفارش سریع فقط با item_id و quantity
-    """
-    if quantity <= 0:
-        raise HTTPException(status_code=400, detail="تعداد باید بیشتر از صفر باشد.")
 
-    db_item = session.get(Item, item_id)
-    if not db_item:
-        raise HTTPException(status_code=404, detail="کالا پیدا نشد.")
+def init_db():
+    """ایجاد جداول دیتابیس بر اساس مدل‌های تعریف شده"""
+    SQLModel.metadata.create_all(engine)
 
-    if db_item.quantity < quantity:
-        raise HTTPException(status_code=400, detail="موجودی کافی نیست.")
-
-    # ساخت سفارش
-    order = Order(user_id=user_id, total_price=0)
-    session.add(order)
-    session.flush()
-
-    # ساخت آیتم سفارش
-    unit_price = db_item.price
-    total_price = unit_price * quantity
-
-    order_item = OrderItem(
-        order_id=order.id,
-        item_id=item_id,
-        quantity=quantity,
-        unit_price=unit_price,
-        total_price=total_price,
-    )
-    session.add(order_item)
-
-    # کاهش موجودی کالا
-    db_item.quantity -= quantity
-    session.add(db_item)
-
-    # به‌روزرسانی قیمت سفارش
-    order.total_price = total_price
-    session.add(order)
-    session.commit()
-    session.refresh(order)
-
-    return order
+@contextmanager
+def get_session():
+    """Dependency برای FastAPI - مدیریت session با contextmanager"""
+    session = Session(engine)
+    try:
+        yield session
+    finally:
+        session.close()
