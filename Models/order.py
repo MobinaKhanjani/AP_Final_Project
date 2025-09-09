@@ -7,7 +7,6 @@ from enum import Enum
 if TYPE_CHECKING:
     from .user import User
     from .item import Item
-    from .transaction import Transaction
 
 class OrderStatus(str, Enum):
     DRAFT = "draft"
@@ -17,7 +16,6 @@ class OrderStatus(str, Enum):
 
 class OrderBase(SQLModel):
     status: OrderStatus = Field(default=OrderStatus.DRAFT)
-    notes: Optional[str] = Field(default=None, max_length=500)
 
 class Order(OrderBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
