@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query, HTTPException 
+from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlmodel import Session, select
 from typing import List, Dict, Any
 from database import get_session
@@ -12,8 +12,12 @@ router = APIRouter()
 async def get_low_stock_items(
     critical_only: bool = Query(False, description="فقط کالاهای تمام شده نمایش داده شود"),
     session: Session = Depends(get_session),
-    current_user: User = Depends(get_current_user)
+    current_user = Depends(get_current_user)  
 ):
+    
+    if not current_user.is_active:
+        raise HTTPException(status_code=400, detail="User inactive")
+    
     """
     دریافت لیست کالاهای با موجودی کم یا تمام شده
     """
