@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from database import get_session
 from security import get_current_user
 from Models.user import User
-from Models.order import Order, OrderItem, OrderStatus
+from Models.customer_order import CustomerOrder, CustomerOrderItem, CustomerOrderStatus
 from Models.item import Item
 
 router = APIRouter()
@@ -30,15 +30,15 @@ async def get_top_selling_items(
                 Item.id,
                 Item.name,
                 Item.sku,
-                func.sum(OrderItem.quantity).label("total_sold"),
-                func.sum(OrderItem.quantity * OrderItem.unit_price).label("total_revenue"),
-                func.count(OrderItem.order_id).label("order_count")
+                func.sum(CustomerOrderItem.quantity).label("total_sold"),
+                func.sum(CustomerOrderItem.quantity * CustomerOrderItem.unit_price).label("total_revenue"),
+                func.count(CustomerOrderItem.order_id).label("order_count")
             )
-            .join(OrderItem, OrderItem.item_id == Item.id)
-            .join(Order, Order.id == OrderItem.order_id)
+            .join(CustomerOrderItem, CustomerOrderItem.item_id == Item.id)
+            .join(CustomerOrder, CustomerOrder.id == CustomerOrderItem.order_id)
             .where(
-                Order.created_at >= start_time,
-                Order.status.in_([OrderStatus.RECEIVED, OrderStatus.CLOSED]),  # فقط سفارشات تکمیل شده
+                CustomerOrder.created_at >= start_time,
+                CustomerOrder.status.in_([CustomerOrderStatus.DELIVERED]),  # فقط سفارشات تحویل شده
                 Item.is_active == True
             )
             .group_by(Item.id, Item.name, Item.sku)
@@ -71,61 +71,3 @@ async def get_top_selling_items(
             status_code=500, 
             detail=f"خطا در دریافت پرفروش‌ترین کالاها: {str(e)}"
         )
-
-# @router.get("/top-selling/daily", response_model=List[Dict[str, Any]])
-# async def get_daily_top_selling_items(
-#     days: int = Query(7, ge=1, le=30, description="تعداد روزهای گذشته"),
-#     limit: int = Query(10, ge=1, le=100, description="تعداد آیتم‌های بازگشتی"),
-#     session: Session = Depends(get_session),
-#     current_user: User = Depends(get_current_user)
-# ):
-#     """
-#     دریافت پرفروش‌ترین کالاها در روزهای اخیر (گروه‌بندی روزانه)
-#     """
-#     try:
-#         start_time = datetime.utcnow() - timedelta(days=days)
-        
-#         daily_top_query = (
-#             select(
-#                 Item.id,
-#                 Item.name,
-#                 Item.sku,
-#                 func.date(Order.created_at).label("sale_date"),
-#                 func.sum(OrderItem.quantity).label("daily_sold"),
-#                 func.sum(OrderItem.quantity * OrderItem.unit_price).label("daily_revenue")
-#             )
-#             .join(OrderItem, OrderItem.item_id == Item.id)
-#             .join(Order, Order.id == OrderItem.order_id)
-#             .where(
-#                 Order.created_at >= start_time,
-#                 Order.status.in_([OrderStatus.RECEIVED, OrderStatus.CLOSED]),
-#                 Item.is_active == True
-#             )
-#             .group_by(Item.id, Item.name, Item.sku, func.date(Order.created_at))
-#             .order_by(desc("daily_sold"))
-#             .limit(limit)
-#         )
-        
-#         results = session.exec(daily_top_query).all()
-        
-#         daily_items = []
-#         for result in results:
-#             item_id, name, sku, sale_date, daily_sold, daily_revenue = result
-            
-#             daily_items.append({
-#                 "id": item_id,
-#                 "name": name,
-#                 "sku": sku,
-#                 "sale_date": sale_date,
-#                 "daily_sold": daily_sold,
-#                 "daily_revenue": daily_revenue,
-#                 "days_ago": (datetime.utcnow().date() - sale_date).days
-#             })
-        
-#         return daily_items
-        
-#     except Exception as e:
-#         raise HTTPException(
-#             status_code=500, 
-#             detail=f"خطا در دریافت آمار روزانه: {str(e)}"
-#         )
