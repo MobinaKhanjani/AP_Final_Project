@@ -1,5 +1,5 @@
 from sqlmodel import Session
-from models.item import Item
+from Models.item import Item
 from database import get_session
 
 def search_item_by_id(item_id: int) -> Item | None:

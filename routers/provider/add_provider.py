@@ -1,5 +1,5 @@
 from sqlmodel import Session
-from models.provider import Provider
+from Models.Provider import Provider
 from database import get_session
 
 def add_provider(

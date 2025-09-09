@@ -1,6 +1,6 @@
 from sqlmodel import select, Session
-from models.provider import Provider
-from models.item import Item
+from Models.Provider import Provider
+from Models.item import Item
 from database import get_session
 
 def delete_provider_by_id(provider_id: int) -> bool:
