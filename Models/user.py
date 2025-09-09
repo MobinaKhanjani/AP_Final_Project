@@ -1,7 +1,7 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional, List, TYPE_CHECKING
 from datetime import datetime
-from pydantic import EmailStr
+from pydantic import EmailStr, validator
 import bcrypt
 
 if TYPE_CHECKING:
@@ -30,3 +30,50 @@ class User(UserBase, table=True):
     @staticmethod
     def get_password_hash(password: str) -> str:
         return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+    @staticmethod
+    def validate_password_strength(password: str) -> bool:
+        """بررسی قدرت رمز عبور"""
+        if len(password) < 8:
+            return False
+        if not any(char.isdigit() for char in password):
+            return False
+        if not any(char.isalpha() for char in password):
+            return False
+        return True
+
+# کلاس‌های جدید اضافه شده
+class UserCreate(SQLModel):
+    username: str
+    email: EmailStr
+    password: str
+    full_name: Optional[str] = None
+    role: Optional[str] = "user"
+
+    @validator('password')
+    def validate_password(cls, v):
+        if not User.validate_password_strength(v):
+            raise ValueError("رمز عبور باید حداقل ۸ کاراکتر و شامل حروف و اعداد باشد")
+        return v
+
+class UserRead(UserBase):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+
+class UserUpdate(SQLModel):
+    email: Optional[EmailStr] = None
+    full_name: Optional[str] = None
+    password: Optional[str] = None
+    role: Optional[str] = None
+    is_active: Optional[bool] = None
+
+    @validator('password')
+    def validate_password(cls, v):
+        if v is not None and not User.validate_password_strength(v):
+            raise ValueError("رمز عبور باید حداقل ۸ کاراکتر و شامل حروف و اعداد باشد")
+        return v
+
+# برای جلوگیری از circular imports
+from .order import Order
+from .transaction import Transaction
