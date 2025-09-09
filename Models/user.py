@@ -5,8 +5,7 @@ from pydantic import EmailStr, validator
 import bcrypt
 
 if TYPE_CHECKING:
-    from .order import Order
-    from .transaction import Transaction
+    from .customer_order import CustomerOrder
 
 class UserBase(SQLModel):
     username: str = Field(index=True, unique=True, max_length=30)
@@ -21,8 +20,8 @@ class User(UserBase, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     
-    orders: List["Order"] = Relationship(back_populates="user")
-    transactions: List["Transaction"] = Relationship(back_populates="user")
+    #Relationship
+    customer_orders: List["CustomerOrder"] = Relationship(back_populates="user")
 
     def verify_password(self, password: str) -> bool:
         return bcrypt.checkpw(password.encode('utf-8'), self.hashed_password.encode('utf-8'))
@@ -73,7 +72,3 @@ class UserUpdate(SQLModel):
         if v is not None and not User.validate_password_strength(v):
             raise ValueError("رمز عبور باید حداقل ۸ کاراکتر و شامل حروف و اعداد باشد")
         return v
-
-# برای جلوگیری از circular imports
-from .order import Order
-from .transaction import Transaction
