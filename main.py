@@ -4,8 +4,8 @@ from database import init_db
 from routers.auth import router as auth_router
 from routers.item import router as items_router
 from routers.order import router as orders_router
-from routers.transaction import router as transactions_router
 from routers.reports import router as reports_router
+
 
 app = FastAPI(
     title="Inventory Management API",
