@@ -11,8 +11,6 @@ from .supplier_order import (
 
 from .customer_order import (
     CustomerOrder,
-    CustomerOrderCreate, 
-    CustomerOrderRead, 
     CustomerOrderStatus
 )
 # لیست تمام مدل‌ها برای دسترسی عمومی
