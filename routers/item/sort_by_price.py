@@ -1,5 +1,5 @@
 from sqlmodel import select, Session
-from models.item import Item
+from Models.item import Item
 from database import get_session
 def get_items_sorted_by_price(descending: bool = False) -> list[Item]:
     """
