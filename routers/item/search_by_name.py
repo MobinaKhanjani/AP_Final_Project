@@ -1,5 +1,5 @@
 from sqlmodel import select, Session
-from models.item import Item
+from Models.item import Item
 from database import get_session
 
 def search_items_by_name(name_query: str) -> list[Item]:
