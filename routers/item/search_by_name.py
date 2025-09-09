@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
-from ...database import get_session
-from ...models import Item, ItemRead
-from typing import List
+from database import get_session
+from Models import Item, ItemRead
 from sqlmodel import select
+from typing import List
 
 router = APIRouter(prefix="/items", tags=["items"])
 
