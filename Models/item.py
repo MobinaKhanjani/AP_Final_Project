@@ -3,8 +3,8 @@ from typing import Optional, List, TYPE_CHECKING
 from datetime import datetime
 
 if TYPE_CHECKING:
-    from .order import OrderItem
-    from .transaction import Transaction
+    from .supplier_order import SupplierOrderItem
+    from .customer_order import CustomerOrderItem
     from .Provider import Provider
 
 class ItemBase(SQLModel):
@@ -20,9 +20,9 @@ class Item(ItemBase, table=True):
     is_active: bool = Field(default=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     
-    order_items: List["OrderItem"] = Relationship(back_populates="item")
-    transactions: List["Transaction"] = Relationship(back_populates="item")
     provider: "Provider" = Relationship(back_populates="items")
+    supplier_order_items: List["SupplierOrderItem"] = Relationship(back_populates="item")
+    customer_order_items: List["CustomerOrderItem"] = Relationship(back_populates="item")
     
 class ItemCreate(ItemBase):
     pass
@@ -36,6 +36,3 @@ class ItemUpdate(SQLModel):
     quantity: Optional[int] = None
     min_threshold: Optional[int] = None
 
-# برای جلوگیری از خطاهای circular import
-from .transaction import Transaction
-from .order import OrderItem
