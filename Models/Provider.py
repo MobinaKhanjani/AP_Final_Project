@@ -4,7 +4,7 @@ from typing import Optional, List, TYPE_CHECKING
 from datetime import datetime
 
 if TYPE_CHECKING:
-    from .product import Product
+    from .item import Item
 
 class ProviderBase(SQLModel):
     name: str = Field(index=True, max_length=100)
@@ -18,7 +18,7 @@ class Provider(ProviderBase, table=True):
     is_active: bool = Field(default=True)
     
     # Relationships
-    products: List["Product"] = Relationship(back_populates="provider")
+    products: List["Item"] = Relationship(back_populates="provider")
 
 class ProviderCreate(ProviderBase):
     pass
