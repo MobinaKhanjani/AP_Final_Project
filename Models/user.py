@@ -13,14 +13,13 @@ class UserBase(SQLModel):
     username: str = Field(index=True, unique=True, max_length=30)
     email: EmailStr = Field(index=True, unique=True)
     full_name: Optional[str] = Field(default=None, max_length=100)
+    role: str = Field(default="user")  # user, admin
     is_active: bool = Field(default=True)
 
 class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
+    password: Optional[str]=Field(default=None, min_length=8)
     hashed_password: str
-    role: str = Field(default="user")  # user, admin
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
     
     # Relationships - با استفاده از string type hints
     orders: List["Order"] = Relationship(back_populates="user")
@@ -42,7 +41,6 @@ class UserCreate(SQLModel):
 class UserRead(UserBase):
     id: int
     role: str
-    created_at: datetime
 
 class UserUpdate(SQLModel):
     email: Optional[EmailStr] = None
