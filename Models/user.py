@@ -7,7 +7,6 @@ import bcrypt
 # برای جلوگیری از circular imports
 if TYPE_CHECKING:
     from .order import Order
-    from .transaction import Transaction
 
 class UserBase(SQLModel):
     username: str = Field(index=True, unique=True, max_length=30)
@@ -24,7 +23,6 @@ class User(UserBase, table=True):
     
     # Relationships - با استفاده از string type hints
     orders: List["Order"] = Relationship(back_populates="user")
-    transactions: List["Transaction"] = Relationship(back_populates="user")
 
     def verify_password(self, password: str) -> bool:
         return bcrypt.checkpw(password.encode('utf-8'), self.hashed_password.encode('utf-8'))
