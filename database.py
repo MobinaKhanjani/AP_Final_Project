@@ -15,6 +15,6 @@ def init_db():
     SQLModel.metadata.create_all(engine)
 
 def get_session():
-    """دependencies برای ارائه session به routeها"""
+    
     with Session(engine) as session:
         yield session
