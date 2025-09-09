@@ -23,3 +23,19 @@ class Item(ItemBase, table=True):
     order_items: List["OrderItem"] = Relationship(back_populates="item")
     transactions: List["Transaction"] = Relationship(back_populates="item")
     provider: "Provider" = Relationship(back_populates="items")
+    
+class ItemCreate(ItemBase):
+    pass
+
+class ItemRead(ItemBase):
+    id: int
+
+class ItemUpdate(SQLModel):
+    name: Optional[str] = None
+    price: Optional[float] = None
+    quantity: Optional[int] = None
+    min_threshold: Optional[int] = None
+
+# برای جلوگیری از خطاهای circular import
+from .transaction import Transaction
+from .order import OrderItem
