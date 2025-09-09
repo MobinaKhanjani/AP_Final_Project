@@ -18,3 +18,19 @@ class Provider(ProviderBase, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     
     items: List["Item"] = Relationship(back_populates="provider")
+
+ # Relationships
+    products: List["Item"] = Relationship(back_populates="provider")
+
+class ProviderCreate(ProviderBase):
+    pass
+
+class ProviderRead(ProviderBase):
+    id: int
+    is_active: bool
+
+class ProviderUpdate(SQLModel):
+    name: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    is_active: Optional[bool] = None
