@@ -6,7 +6,7 @@ from Models.user import User, UserRead, UserUpdate
 
 router = APIRouter()
 
-@router.put("/me", response_model=UserRead)
+@router.put("/meput", response_model=UserRead)
 async def update_current_user(
     user_update: UserUpdate,
     session: Session = Depends(get_session),

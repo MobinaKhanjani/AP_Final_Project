@@ -4,7 +4,7 @@ from Models.user import User, UserRead
 
 router = APIRouter()
 
-@router.get("/me", response_model=UserRead)
+@router.get("/meget", response_model=UserRead)
 async def read_current_user(
     current_user: User = Depends(get_current_user)
 ):
