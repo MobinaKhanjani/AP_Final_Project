@@ -8,19 +8,14 @@ if TYPE_CHECKING:
     from .item import Item
 
 class SupplierOrderStatus(str, Enum):
-    DRAFT = "draft"           # پیش‌نویس
-    ORDERED = "ordered"       # سفارش داده شده
-    CONFIRMED = "confirmed"   # تایید توسط تامین‌کننده
-    SHIPPED = "shipped"       # ارسال شده
-    RECEIVED = "received"     # دریافت در انبار
-    CANCELLED = "cancelled"   # لغو شده
+    DRAFT = "draft"           # پیش‌نویس (ﺲﯾﻮﻧ ﺶﯿپ)
+    SENT = "sent"             # ارسال شده (هﺪﺷ لﺎﺳرا)
+    RECEIVED = "received"     # دریافت شده (هﺪﺷ ﻞیﻮﺤﺗ)
+    CLOSED = "closed"         # بسته شده (هﺪﺷ ﻪتﺴﺑ)
 
 class SupplierOrderBase(SQLModel):
     status: SupplierOrderStatus = Field(default=SupplierOrderStatus.DRAFT)
     notes: Optional[str] = Field(default=None, max_length=500)
-    total_price: Optional[float] = Field(default=0, ge=0)
-    expected_delivery: datetime  # تاریخ تحویل预期
-    actual_delivery: Optional[datetime] = None  # تاریخ تحویل واقعی
 
 class SupplierOrder(SupplierOrderBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -41,20 +36,13 @@ class SupplierOrderRead(SupplierOrderBase):
     updated_at: datetime
     provider_id: int
 
-class SupplierOrderUpdate(SQLModel):
-    status: Optional[SupplierOrderStatus] = None
-    notes: Optional[str] = None
-    total_price: Optional[float] = None
-    expected_delivery: Optional[datetime] = None
-    actual_delivery: Optional[datetime] = None
-
-# مدل واسط برای SupplierOrder و Item
+# مدل واسط برای ارتباط بین SupplierOrder و Item
 class SupplierOrderItemBase(SQLModel):
     order_id: int = Field(foreign_key="supplierorder.id")
     item_id: int = Field(foreign_key="item.id")
-    quantity: int = Field(gt=0)
-    unit_price: float = Field(gt=0)
-    total_price: float = Field(gt=0)
+    quantity: int = Field(gt=0)  # تعداد (داﺪﻌﺗ)
+    unit_price: float = Field(gt=0)  # قیمت واحد
+    total_price: float = Field(gt=0)  # قیمت کل
 
 class SupplierOrderItem(SupplierOrderItemBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
