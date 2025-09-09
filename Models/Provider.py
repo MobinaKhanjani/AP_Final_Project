@@ -4,7 +4,7 @@ from datetime import datetime
 
 if TYPE_CHECKING:
     from .item import Item
-    from .order import Order
+    from .supplier_order import SupplierOrder
 
 class ProviderBase(SQLModel):
     name: str = Field(index=True, max_length=100)
@@ -20,10 +20,10 @@ class Provider(ProviderBase, table=True):
     # فیلد برای امتیازدهی⭐
     delivery_time_rating: Optional[int] = Field(default=None, ge=1, le=5)  # امتیاز سرعت تحویل (1-5)
     delivery_accuracy_score: Optional[int] = Field(default=None, ge=0, le=100)  # امتیاز صحت تحویل (0-100)
-    orders: List["Order"] = Relationship(back_populates="provider")
     # Relationships - فقط یک رابطه داشته باش
     #chera?
     items: List["Item"] = Relationship(back_populates="provider")
+    supplier_orders: List["SupplierOrder"] = Relationship(back_populates="provider")
 
 class ProviderCreate(ProviderBase):
     pass
