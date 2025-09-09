@@ -5,7 +5,7 @@ from config import settings
 DATABASE_URL = "sqlite:///./inventory.db"
 
 # ایجاد موتور دیتابیس
-engine = create_engine(
+engine = create_engine( 
     DATABASE_URL,
     connect_args={"check_same_thread": False},  # مورد نیاز برای SQLite
     echo=True  # نمایش کوئری‌ها در کنسول برای دیباگ (در production غیرفعال کنید)
