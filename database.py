@@ -1,5 +1,4 @@
 from sqlmodel import SQLModel, create_engine, Session
-from config import settings
 
 # تنظیمات اتصال به دیتابیس SQLite
 DATABASE_URL = "sqlite:///./inventory.db"
