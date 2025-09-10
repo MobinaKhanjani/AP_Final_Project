@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from database import get_session
-from Models.provider import Provider
+from Models.Provider import Provider
 
 router = APIRouter(prefix="/provider", tags=["provider"])
 
