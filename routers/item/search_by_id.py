@@ -1,24 +1,23 @@
-from sqlmodel import Session
-from Models.item import Item
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from fastapi.responses import JSONResponse
 from database import get_session
+from Models import Item, ItemRead
 
-def search_item_by_id(item_id: int) -> Item | None:
-    """
-    جستجوی محصول بر اساس شناسه (ID)
-    """
-    session: Session = next(get_session())
-    item = session.get(Item, item_id)
-    session.close()
-    return item
-if __name__ == "__main__":
-    item_id = 1  # شناسه‌ای که می‌خوای جستجو کنی
-    item = search_item_by_id(item_id)
-    if item:
-        print(f"✅ محصول پیدا شد:")
-        print(f"نام: {item.name}")
-        print(f"قیمت: {item.price}")
-        print(f"موجودی: {item.quantity}")
-        print(f"شناسه تأمین‌کننده: {item.provider_id}")
-        print(f"تاریخ ایجاد: {item.created_at}")
-    else:
-        print("❌ محصولی با این شناسه پیدا نشد.")
+router = APIRouter(prefix="/items", tags=["items"])
+
+@router.get("/search/{item_id}", response_model=ItemRead)
+def get_item_by_id(item_id: int, db: Session = Depends(get_session)):
+    try:
+        item = db.get(Item, item_id)
+        if not item:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"آیتم با شناسه {item_id} پیدا نشد"
+            )
+        return item
+    except Exception as e:
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"message": f"خطا در دریافت آیتم: {str(e)}"}
+        )
