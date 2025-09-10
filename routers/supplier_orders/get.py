@@ -50,3 +50,11 @@ async def get_supplier_order(
     order_data["provider_name"] = provider.name if provider else "نامشخص"
     
     return order_data
+
+#جزئیات کامل یک سفارش خاص
+
+#اطلاعات تامین‌کننده مربوطه
+
+#لیست آیتم‌های سفارش با اطلاعات کامل محصولات
+
+#خطای 404 اگر سفارش وجود نداشته باشه
