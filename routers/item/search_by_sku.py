@@ -5,7 +5,7 @@ from database import get_session
 
 router = APIRouter()
 
-@router.get("/items/search/sku", response_model=Item)
+@router.get("/Search_by_SKU", response_model=Item)
 def search_item_by_sku(sku: str, session=Depends(get_session)):
     query = select(Item).where(Item.sku == sku)
     item = session.exec(query).first()
