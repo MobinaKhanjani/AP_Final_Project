@@ -5,7 +5,7 @@ from Models.Provider import Provider, ProviderCreate, ProviderRead
 
 router = APIRouter()
 
-@router.post("/", response_model=ProviderRead)
+@router.post("/add", response_model=ProviderRead)
 def add_provider(
     data: ProviderCreate, 
     session: Session = Depends(get_session)  
