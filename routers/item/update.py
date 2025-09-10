@@ -5,7 +5,7 @@ from database import get_session
 
 router = APIRouter()
 
-@router.put("/items/{item_id}", response_model=Item)
+@router.put("/Update/{item_id}", response_model=Item)
 def update_item(item_id: int, update_data: ItemUpdate, session: Session = Depends(get_session)):
     item = session.get(Item, item_id)
     if not item:
