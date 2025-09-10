@@ -7,7 +7,7 @@ from .delete import router as delete_router
 from .search_by_name import router as search_name_router
 from .search_by_sku import router as search_sku_router
 from .sort_by_price import router as sort_price_router
-from .sort_by_alphabet import router as sort_name_router
+from .sort_by_alphbet import router as sort_name_router
 
 router = APIRouter()
 router.include_router(create_router, tags=["Items"])
