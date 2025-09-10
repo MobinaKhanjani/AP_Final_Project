@@ -1,12 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from fastapi.responses import JSONResponse
 from database import get_session
-from Models.Provider import Provider, ProviderCreate
+from Models.provider import Provider, ProviderCreate, ProviderRead
 
-router = APIRouter(prefix="/add", tags=["provider"])
+router = APIRouter(prefix="/provider", tags=["provider"])
 
-@router.post("/", response_model=ProviderCreate)
+@router.post("/", response_model=ProviderRead)
 def add_provider(data: ProviderCreate, db: Session = Depends(get_session)):
     try:
         provider = Provider(**data.dict())
