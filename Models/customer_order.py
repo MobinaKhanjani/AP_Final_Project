@@ -37,3 +37,17 @@ class CustomerOrderItem(CustomerOrderItemBase, table=True):
     # Relationships
     order: "CustomerOrder" = Relationship(back_populates="items")
     item: "Item" = Relationship(back_populates="customer_order_items")
+    
+class CustomerOrderCreate(CustomerOrderBase):
+    user_id: int
+    items: List["CustomerOrderItemBase"]
+
+class CustomerOrderRead(CustomerOrderBase):
+    id: int
+    created_at: datetime
+    user_id: int
+    items: List["CustomerOrderItem"]
+
+class CustomerOrderUpdate(SQLModel):
+    status: Optional[CustomerOrderStatus] = None
+    items: Optional[List["CustomerOrderItemBase"]] = None
