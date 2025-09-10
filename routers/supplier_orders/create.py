@@ -14,7 +14,7 @@ class SupplierOrderCreateRequest(SQLModel):
     provider_id: int
     items: List[dict]  # [{"item_id": 1, "quantity": 10}, ...]
 
-@router.post("/supplier-orders", response_model=SupplierOrder)
+@router.post("/Create", response_model=SupplierOrder)
 async def create_supplier_order(
     order_data: SupplierOrderCreateRequest,
     session: Session = Depends(get_session),
