@@ -2,6 +2,7 @@ from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional, List, TYPE_CHECKING
 from datetime import datetime
 from enum import Enum
+from .user import User
 
 if TYPE_CHECKING:
     from .user import User
@@ -37,3 +38,17 @@ class CustomerOrderItem(CustomerOrderItemBase, table=True):
     # Relationships
     order: "CustomerOrder" = Relationship(back_populates="items")
     item: "Item" = Relationship(back_populates="customer_order_items")
+    
+class CustomerOrderCreate(CustomerOrderBase):
+    user_id: int
+    items: List["CustomerOrderItemBase"]
+
+class CustomerOrderRead(CustomerOrderBase):
+    id: int
+    created_at: datetime
+    user_id: int
+    items: List["CustomerOrderItem"]
+
+class CustomerOrderUpdate(SQLModel):
+    status: Optional[CustomerOrderStatus] = None
+    items: Optional[List["CustomerOrderItemBase"]] = None
