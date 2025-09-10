@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware 
 from database import init_db
 from routers.auth import router as auth_router
 from routers.reports import router as reports_router
@@ -17,7 +17,7 @@ app = FastAPI(
 )
 
 # تنظیمات CORS
-app.add_middleware(
+app.add_middleware( #front
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
@@ -26,7 +26,7 @@ app.add_middleware(
 )
 
 # رویداد راه‌اندازی
-@app.on_event("startup")
+@app.on_event("startup") #+
 async def on_startup():
     init_db()
     print("✅ Database initialized successfully")
