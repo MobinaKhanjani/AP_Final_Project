@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
-from app.models.customer_order import CustomerOrder, CustomerOrderUpdate
-from app.database import get_session
+from Models.customer_order import CustomerOrder, CustomerOrderUpdate
+from database import get_session
 
 router = APIRouter()
 
