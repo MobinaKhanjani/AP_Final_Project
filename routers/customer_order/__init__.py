@@ -9,3 +9,13 @@ router.include_router(list_router, tags=["Customer Orders"])
 router.include_router(create_router, tags=["Customer Orders"])
 router.include_router(get_router, tags=["Customer Orders"])
 router.include_router(update_router, tags=["Customer Orders"])
+
+
+#وجود تگز:
+#1. ** grouping در Swagger UI **
+# ** organization در documentation **
+#مرتب‌سازی endpointها در docs
+
+#گروه‌بندی منطقی APIها
+
+#زیباتر شدن documentation
