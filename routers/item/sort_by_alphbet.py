@@ -6,7 +6,7 @@ from typing import List
 
 router = APIRouter()
 
-@router.get("/items/sort/name", response_model=List[Item])
+@router.get("/Sort_by_name", response_model=List[Item])
 def sort_items_by_name(order: str = "asc", session=Depends(get_session)):
     query = select(Item)
     if order == "desc":
