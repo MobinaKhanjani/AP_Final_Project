@@ -2,6 +2,7 @@ from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional, List, TYPE_CHECKING
 from datetime import datetime
 from enum import Enum
+from .user import User
 
 if TYPE_CHECKING:
     from .user import User
