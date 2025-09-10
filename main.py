@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+#from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware 
 from database import init_db
 from routers.auth import router as auth_router
@@ -38,6 +39,8 @@ app.include_router(items_router, prefix="/item", tags=["Items"])
 app.include_router(supplier_orders_router, prefix="/supplier_orders", tags=["Supplier Orders"])
 app.include_router(customer_orders_router, prefix="/customer_order", tags=["Customer Orders"])
 app.include_router(reports_router, prefix="/reports", tags=["Reports"])
+
+#app.mount("/front", StaticFiles(directory="front"), name="front")
 
 @app.get("/", include_in_schema=False)
 async def root():
