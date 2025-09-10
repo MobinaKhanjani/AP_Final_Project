@@ -1,22 +1,20 @@
-from sqlmodel import select, Session
-from models.item import Item
-from database import get_session
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from typing import List
+from ...database import get_session
+from ...models import ItemRead, Item
+from sqlmodel import select
 
-def search_items_by_name(name_query: str) -> list[Item]:
-    """
-    جستجوی کالاها بر اساس نام (جستجوی جزئی و حساس به حروف)
-    """
-    session: Session = next(get_session())
-    statement = select(Item).where(Item.name.contains(name_query))
-    results = session.exec(statement).all()
-    session.close()
-    return results
-if __name__ == "__main__":
-    name_input = "کابل"  # بخشی از نام کالا
-    items = search_items_by_name(name_input)
-    if items:
-        print(f"✅ {len(items)} کالا پیدا شد:")
-        for item in items:
-            print(f"- {item.name} | قیمت: {item.price} | موجودی: {item.quantity}")
-    else:
-        print("❌ هیچ کالایی با این نام پیدا نشد.")
+router = APIRouter(prefix="/items", tags=["items"])
+
+@router.get("/sorted-by-name", response_model=List[ItemRead])
+def get_items_sorted_by_name(db: Session = Depends(get_session)):
+    try:
+        statement = select(Item).order_by(Item.name)
+        items = db.exec(statement).all()
+        return items
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"خطا در دریافت آیتم‌ها: {str(e)}"
+        )
