@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from database import get_session
-from Models.provider import Provider
+from Models.Provider import Provider
 
-router = APIRouter(prefix="/provider", tags=["provider"])
+router = APIRouter(prefix="/delete", tags=["provider"])
 
 @router.delete("/{provider_id}")
 def delete_provider(provider_id: int, db: Session = Depends(get_session)):
