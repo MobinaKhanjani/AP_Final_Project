@@ -5,7 +5,7 @@ from database import get_session
 
 router = APIRouter()
 
-@router.put("/providers/{provider_id}", response_model=Provider)
+@router.put("/edit/{provider_id}", response_model=Provider)
 def update_provider(provider_id: int, update_data: ProviderUpdate, session: Session = Depends(get_session)):
     provider = session.get(Provider, provider_id)
     if not provider:
