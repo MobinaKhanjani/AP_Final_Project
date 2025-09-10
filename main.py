@@ -87,7 +87,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import init_db
 from routers.auth import router as auth_router
 from routers.reports import router as reports_router
-
+from routers.supplier_orders import router as supplier_orders_router
 app = FastAPI(
     title="Inventory Management API",
     description="سیستم مدیریت موجودی و انبار",
