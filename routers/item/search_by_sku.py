@@ -1,24 +1,23 @@
-from sqlmodel import select, Session
-from Models.item import Item
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from fastapi.responses import JSONResponse
 from database import get_session
+from Models import Item, ItemRead
 
-def search_item_by_sku(sku: str) -> Item | None:
-    """
-    جستجوی کالا بر اساس شناسه SKU
-    """
-    session: Session = next(get_session())
-    statement = select(Item).where(Item.sku == sku)
-    result = session.exec(statement).first()
-    session.close()
-    return result
-if __name__ == "__main__":
-    sku_input = "ABC123"  # مقدار SKU که می‌خوای جستجو کنی
-    item = search_item_by_sku(sku_input)
-    if item:
-        print("✅ کالا پیدا شد:")
-        print(f"نام: {item.name}")
-        print(f"قیمت: {item.price}")
-        print(f"موجودی: {item.quantity}")
-        print(f"تأمین‌کننده: {item.provider_id}")
-    else:
-        print("❌ کالایی با این SKU پیدا نشد.")
+router = APIRouter(prefix="/items", tags=["items"])
+
+@router.get("/search/sku/{sku}", response_model=ItemRead)
+def get_item_by_sku(sku: str, db: Session = Depends(get_session)):
+    try:
+        item = db.query(Item).filter(Item.sku == sku).first()
+        if not item:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"آیتم با کد SKU '{sku}' پیدا نشد"
+            )
+        return item
+    except Exception as e:
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"message": f"خطا در دریافت آیتم: {str(e)}"}
+        )
