@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlmodel import select
-from app.models.customer_order import CustomerOrder, CustomerOrderStatus
-from app.database import get_session
+from Models.customer_order import CustomerOrder, CustomerOrderStatus
+from database import get_session
 from typing import List, Optional
 
 router = APIRouter()
