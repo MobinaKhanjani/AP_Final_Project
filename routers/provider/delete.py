@@ -6,7 +6,7 @@ from Models.item import Item  # برای بررسی وابستگی
 
 router = APIRouter()
 
-@router.delete("/{provider_id}")
+@router.delete("/delete/{provider_id}")
 def delete_provider(
     provider_id: int, 
     session: Session = Depends(get_session)  # ✅ تغییر به session
