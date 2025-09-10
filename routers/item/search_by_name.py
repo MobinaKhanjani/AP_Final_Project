@@ -1,20 +1,21 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List
+from fastapi.responses import JSONResponse
 from ...database import get_session
-from ...models import ItemRead, Item
+from ...models import Item, ItemRead
+from typing import List
 from sqlmodel import select
 
 router = APIRouter(prefix="/items", tags=["items"])
 
-@router.get("/sorted-by-name", response_model=List[ItemRead])
-def get_items_sorted_by_name(db: Session = Depends(get_session)):
+@router.get("/sortedbyname", response_model=List[ItemRead])
+def get_sorted_by_name(db: Session = Depends(get_session)):
     try:
         statement = select(Item).order_by(Item.name)
         items = db.exec(statement).all()
         return items
     except Exception as e:
-        raise HTTPException(
+        return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"خطا در دریافت آیتم‌ها: {str(e)}"
+            content={"message": f"خطا در دریافت آیتم‌ها: {str(e)}"}
         )

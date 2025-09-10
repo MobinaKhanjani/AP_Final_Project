@@ -2,9 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import init_db
 from routers.auth import router as auth_router
-from routers.items import router as items_router
-from routers.orders import router as orders_router
-from routers.transactions import router as transactions_router
+from routers.item import router as items_router
+from routers.order import router as orders_router
+from routers.transaction import router as transactions_router
 from routers.reports import router as reports_router
 
 app = FastAPI(
@@ -73,3 +73,11 @@ async def api_info():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+    
+from routers import add_item, delete_item, edit_item
+
+app = FastAPI()
+
+app.include_router(add_item.router, tags=["Item"])
+app.include_router(delete_item.router, tags=["Item"])
+app.include_router(edit_item.router, tags=["Item"])
