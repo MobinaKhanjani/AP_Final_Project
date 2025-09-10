@@ -5,7 +5,7 @@ from database import get_session
 
 router = APIRouter()
 
-@router.delete("/items/{item_id}")
+@router.delete("/Delete/{item_id}")
 def delete_item(item_id: int, session: Session = Depends(get_session)):
     item = session.get(Item, item_id)
     if not item:
