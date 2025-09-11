@@ -35,7 +35,8 @@ async def register(
         username=user_data.username,
         email=user_data.email,
         hashed_password=hashed_password,
-        full_name=user_data.full_name
+        full_name=user_data.full_name,
+        role=user_data.role
     )
     
     session.add(db_user)
