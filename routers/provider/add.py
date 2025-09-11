@@ -2,13 +2,16 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session ,select 
 from database import get_session
 from Models.Provider import Provider, ProviderCreate, ProviderRead
+from security import get_current_user
+from Models.user import User
 
 router = APIRouter()
 
 @router.post("/add", response_model=ProviderRead)
 def add_provider(
     data: ProviderCreate, 
-    session: Session = Depends(get_session)  
+    session: Session = Depends(get_session) , 
+    current_user: User = Depends(get_current_user)
 ):
     try:
         # بررسی وجود تامین‌کننده با همین نام
