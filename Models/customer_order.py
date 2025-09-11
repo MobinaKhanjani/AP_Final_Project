@@ -15,7 +15,7 @@ class CustomerOrderStatus(str, Enum):
     CLOSED = "closed" 
 
 class CustomerOrderBase(SQLModel):
-    status: CustomerOrderStatus = Field(default=CustomerOrderStatus.PENDING)
+    status: CustomerOrderStatus = Field(default=CustomerOrderStatus.DRAFT)
 
 class CustomerOrder(CustomerOrderBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
