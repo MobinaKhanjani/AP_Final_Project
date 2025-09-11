@@ -10,7 +10,7 @@ class ProviderBase(SQLModel):
     name: str = Field(index=True, max_length=100)
     contact_person: Optional[str] = Field(default=None, max_length=100)
     email: Optional[str] = Field(default=None, max_length=100)
-    phone: Optional[str] = Field(default=None, max_length=20)
+    phone: int = Field(default=None, max_length=20)
 
 class Provider(ProviderBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
