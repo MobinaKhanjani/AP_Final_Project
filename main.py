@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-#from fastapi.staticfiles import StaticFiles
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware 
+from routers.auth.login import router as login_router  # 👈 اضافه شده
 from database import init_db
 from routers.auth import router as auth_router
 from routers.reports import router as reports_router
@@ -26,6 +27,9 @@ app.add_middleware( #front
     allow_headers=["*"],
 )
 
+# Static files (فرانت‌اند)
+app.mount("/front", StaticFiles(directory="front"), name="front")  # 👈 فعال شده
+
 # رویداد راه‌اندازی
 @app.on_event("startup") #+
 async def on_startup():
@@ -33,7 +37,8 @@ async def on_startup():
     print("✅ Database initialized successfully")
 
 # شامل کردن همه روترها
-app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
+#app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
+app.include_router(login_router)  # 👈 فقط برای /login بدون prefix
 app.include_router(providers_router, prefix="/provider", tags=["Providers"])
 app.include_router(items_router, prefix="/item", tags=["Items"])
 app.include_router(supplier_orders_router, prefix="/supplier_orders", tags=["Supplier Orders"])
