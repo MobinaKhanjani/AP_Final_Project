@@ -9,10 +9,10 @@ if TYPE_CHECKING:
     from .item import Item
 
 class CustomerOrderStatus(str, Enum):
-    PENDING = "pending"    # در انتظار
-    PAID = "paid"          # پرداخت شده
-    SHIPPED = "shipped"    # ارسال شده
-    DELIVERED = "delivered" # تحویل داده شده
+    DRAFT = "draft"           # پیش‌نویس (ﺲﯾﻮﻧ ﺶﯿپ)
+    SENT = "sent"             # ارسال شده (هﺪﺷ لﺎﺳرا)
+    RECEIVED = "received"     # دریافت شده (هﺪﺷ ﻞیﻮﺤﺗ)
+    CLOSED = "closed" 
 
 class CustomerOrderBase(SQLModel):
     status: CustomerOrderStatus = Field(default=CustomerOrderStatus.PENDING)
