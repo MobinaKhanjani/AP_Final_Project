@@ -47,7 +47,7 @@ class UserCreate(SQLModel):
     email: EmailStr
     password: str
     full_name: Optional[str] = None
-    role: Optional[str] = "user"
+    role: str = Field(default="user")
 
     @validator('password')
     def validate_password(cls, v):
