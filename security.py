@@ -35,13 +35,15 @@ async def get_current_user(
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
         user_id: str = payload.get("sub")
-        if user_id is None:
+        role: str = payload.get("role")
+        if user_id is None or role != "admin": 
             raise credentials_exception
     except JWTError:
         raise credentials_exception
     
     user = session.get(User, int(user_id))
-    if user is None or not user.is_active:
+    role: str = payload.get("role")
+    if user is None or not user.is_active or user.role != "admin":
         raise credentials_exception
     
     return user
