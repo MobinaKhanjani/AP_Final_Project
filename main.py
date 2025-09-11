@@ -38,7 +38,7 @@ async def on_startup():
 
 # شامل کردن همه روترها
 app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
-app.include_router(login_router)  # 👈 فقط برای /login بدون prefix
+#app.include_router(login_router)  # 👈 فقط برای /login بدون prefix
 app.include_router(providers_router, prefix="/provider", tags=["Providers"])
 app.include_router(items_router, prefix="/item", tags=["Items"])
 app.include_router(supplier_orders_router, prefix="/supplier_orders", tags=["Supplier Orders"])
