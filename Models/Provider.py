@@ -1,6 +1,7 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional, List, TYPE_CHECKING
 from datetime import datetime
+from pydantic import validator
 
 if TYPE_CHECKING:
     from .item import Item
@@ -10,8 +11,15 @@ class ProviderBase(SQLModel):
     name: str = Field(index=True, max_length=100)
     contact_person: Optional[str] = Field(default=None, max_length=100)
     email: Optional[str] = Field(default=None, max_length=100)
-    phone: int = Field(default=None, max_length=20)
+    phone: str = Field(default=None, max_length=20, description="شماره تلفن باید با 0 شروع شود و فقط عدد باشد")
 
+    @validator('phone')
+    def validate_phone(cls, v):
+        if not v[1:].isdigit():  # بعد از 0 فقط اعداد باشند
+            raise ValueError("شماره تلفن باید فقط شامل عدد باشد")
+        return v
+    
+    
 class Provider(ProviderBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     is_active: bool = Field(default=True)
