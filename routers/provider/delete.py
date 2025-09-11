@@ -2,14 +2,18 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select  
 from database import get_session
 from Models.Provider import Provider
-from Models.item import Item  # برای بررسی وابستگی
+from Models.item import Item  
+from security import get_current_user
+from Models.user import User
+
 
 router = APIRouter()
 
 @router.delete("/delete/{provider_id}")
 def delete_provider(
     provider_id: int, 
-    session: Session = Depends(get_session)  # ✅ تغییر به session
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user)
 ):
     # پیدا کردن تامین‌کننده
     provider = session.get(Provider, provider_id)

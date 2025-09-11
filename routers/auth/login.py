@@ -14,6 +14,7 @@ async def login(
 ):
     """
     ورود کاربر و دریافت توکن
+    فقط برا ادمین
     """
     user = session.exec(select(User).where(User.username == form_data.username)).first()
     
@@ -29,12 +30,17 @@ async def login(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="حساب کاربری غیرفعال است"
         )
-    
+    if user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="شما مجاز به ورود نیستید. فقط ادمین‌ها می‌توانند وارد شوند."
+        )
     access_token = create_access_token(data={"sub": str(user.id), "username": user.username})
     
     return {
         "access_token": access_token,
         "token_type": "bearer",
         "user_id": user.id,
-        "username": user.username
+        "username": user.username,
+        "role": user.role
     }
