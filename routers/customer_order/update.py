@@ -4,7 +4,7 @@ from database import get_session
 
 router = APIRouter()
 
-@router.put("/customer-orders/{order_id}", response_model=CustomerOrder)
+@router.put("/update_order", response_model=CustomerOrder)
 def update_order(order_id: int, update_data: CustomerOrderUpdate, session=Depends(get_session)):
     order = session.get(CustomerOrder, order_id)
     if not order:
