@@ -14,6 +14,7 @@ class ItemBase(SQLModel):
     quantity: int = Field(default=0, ge=0)
     min_threshold: int = Field(default=5, ge=0)
     provider_id: int = Field(foreign_key="provider.id")
+    notes: Optional[str] = Field(default=None, max_length=500)
 
 class Item(ItemBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
