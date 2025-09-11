@@ -9,6 +9,6 @@ async def read_current_user(
     current_user: User = Depends(get_current_user)
 ):
     """
-    دریافت اطلاعات کاربر جاری
+    دریافت اطلاعات ادمین جاری
     """
     return current_user
