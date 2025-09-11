@@ -10,7 +10,3 @@ router = APIRouter()
 def search_items_by_name(name: str, session=Depends(get_session)):
     query = select(Item).where(Item.name.contains(name))
     return session.exec(query).all()
-    
-    #if not item:
-        #raise HTTPException(status_code=404, detail="کالا با این SKU پیدا نشد")
-    #return item
