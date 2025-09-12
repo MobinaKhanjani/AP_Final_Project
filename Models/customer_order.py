@@ -30,7 +30,7 @@ class CustomerOrder(CustomerOrderBase, table=True):
 class CustomerOrderItemBase(SQLModel):
     order_id: int = Field(foreign_key="customerorder.id")
     item_id: int = Field(foreign_key="item.id")
-    quantity: int = Field(gt=0)  # تعداد
+    quantity: int = Field(gt=0)  
 
 class CustomerOrderItem(CustomerOrderItemBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
