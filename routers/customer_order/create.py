@@ -84,7 +84,8 @@ def create_customer_order(
         # ایجاد آیتم سفارش
         order_item = CustomerOrderItem(
             item_id=item_request.item_id,
-            quantity=item_request.quantity
+            quantity=item_request.quantity,
+            
         )
         order_items.append(order_item)
         
