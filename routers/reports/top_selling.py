@@ -31,17 +31,17 @@ async def get_top_selling_items(
                 Item.name,
                 Item.sku,
                 func.sum(CustomerOrderItem.quantity).label("total_sold"),
-                func.sum(CustomerOrderItem.quantity * CustomerOrderItem.unit_price).label("total_revenue"),
+                func.sum(CustomerOrderItem.quantity * Item.price).label("total_revenue"),
                 func.count(CustomerOrderItem.order_id).label("order_count")
             )
             .join(CustomerOrderItem, CustomerOrderItem.item_id == Item.id)
             .join(CustomerOrder, CustomerOrder.id == CustomerOrderItem.order_id)
             .where(
                 CustomerOrder.created_at >= start_time,
-                CustomerOrder.status.in_([CustomerOrderStatus.DELIVERED]),  # فقط سفارشات تحویل شده
+                CustomerOrder.status.in_([CustomerOrderStatus.RECEIVED]),  # فقط سفارشات تحویل شده
                 Item.is_active == True
             )
-            .group_by(Item.id, Item.name, Item.sku)
+            .group_by(Item.id, Item.name, Item.sku,Item.price)
             .order_by(desc("total_sold"))
             .limit(limit)
         )
